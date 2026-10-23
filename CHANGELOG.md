@@ -52,6 +52,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   `download-*` and `embed` with the model defaults (all `False`), which
   override what the team and theme would otherwise apply. It now sends only
   the publish blocks that were set or read from the API.
+- Name columns with a blank header `X.1`, `X.2`, ... as Datawrapper does,
+  instead of pandas' `Unnamed: 1`, so a chart's settings that refer to them
+  (`axes`, `column-format`) still match after `update()`.
 
 ### Removed
 
