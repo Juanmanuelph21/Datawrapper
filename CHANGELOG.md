@@ -41,6 +41,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Send each column's `number-format` in `ColumnFormatList`. The serializer
   dropped it along with the default values, so a column's number or date
   format was lost on create, and on every `update()` of a fetched chart.
+- Read chart data separated by semicolons, tabs or pipes, not only commas.
+  `Datawrapper.get()` parsed every CSV response with a comma, so charts with
+  semicolon-separated data could not be fetched, and tab-separated data (what
+  the editor stores when you paste from a spreadsheet) came back as a single
+  column. `get()` and `BaseChart.deserialize_data()` now share a
+  `read_csv()` helper that sniffs the delimiter from the first lines.
 
 ### Removed
 
