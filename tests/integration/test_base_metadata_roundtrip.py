@@ -11,7 +11,6 @@ from pathlib import Path
 from typing import Any
 
 import pytest
-from pydantic import ValidationError
 
 from datawrapper import (
     AreaChart,
@@ -42,38 +41,10 @@ SAMPLE_PATHS = sorted(
     path for folder in SAMPLE_CLASSES for path in (SAMPLES_DIR / folder).glob("*.json")
 )
 
-# These samples store annotation numbers as strings or floats ("opacity": "10",
-# "dy": -29.5). The typed annotation models accept them on load but reject them
-# when the chart is serialized again, a separate bug from the one tested here.
-TYPED_ANNOTATION_FAILURES = {
-    "area/migration",
-    "area/plastic",
-    "area/population",
-    "line/covid",
-    "line/crypto",
-}
-
 
 def sample_id(path: Path) -> str:
     """Name a sample by its folder and file stem, e.g. ``bar/happiness-scores``."""
     return f"{path.parent.name}/{path.stem}"
-
-
-def typed_sample_params() -> list:
-    """Typed-class cases, marking the known annotation failures as xfail."""
-    params = []
-    for path in SAMPLE_PATHS:
-        marks = []
-        if sample_id(path) in TYPED_ANNOTATION_FAILURES:
-            marks.append(
-                pytest.mark.xfail(
-                    raises=ValidationError,
-                    strict=True,
-                    reason="annotation numbers stored as strings or floats",
-                )
-            )
-        params.append(pytest.param(path, id=sample_id(path), marks=marks))
-    return params
 
 
 def load_sample(path: Path) -> dict[str, Any]:
@@ -120,7 +91,7 @@ def test_base_chart_roundtrip_preserves_common_sections(sample_path):
     assert_common_sections_preserved(api_response["metadata"], result)
 
 
-@pytest.mark.parametrize("sample_path", typed_sample_params())
+@pytest.mark.parametrize("sample_path", SAMPLE_PATHS, ids=sample_id)
 def test_typed_chart_roundtrip_preserves_common_sections(sample_path):
     """Typed chart classes inherit the same guarantee from BaseChart."""
     api_response = load_sample(sample_path)
