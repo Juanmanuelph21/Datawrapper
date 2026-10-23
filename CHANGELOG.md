@@ -26,6 +26,14 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   The factory keyed the class under `d3-bars-split`, so real multiple-column
   charts fell back to `BaseChart` and split-bar charts raised a chart type
   mismatch instead of falling back.
+- Keep chart settings that `BaseChart` does not model when a fetched chart is
+  saved again. `serialize_model()` merged its section defaults over the raw API
+  metadata one level deep, so an unchanged `get()` then `update()` reset
+  `describe` number formatting (`number-format`, `number-divisor`,
+  `number-prepend`, `number-append`), forced `visualize.sharing.auto` to
+  `False` and replaced `publish.blocks` wholesale, dropping blocks such as
+  `edit-in-datawrapper`. Sections are now merged deeply, with values set on the
+  chart still taking precedence.
 
 ### Removed
 
