@@ -34,6 +34,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   `False` and replaced `publish.blocks` wholesale, dropping blocks such as
   `edit-in-datawrapper`. Sections are now merged deeply, with values set on the
   chart still taking precedence.
+- Accept annotation numbers the Datawrapper editor stores as strings or
+  decimals: `RangeAnnotation.opacity` (`"10"`) and `TextAnnotation.dx` and
+  `dy` (`"3"`, `-29.5`). Charts with such annotations loaded with `get()` but
+  failed validation when serialized again, so `update()` raised.
 
 ### Removed
 
